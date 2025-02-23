@@ -19,13 +19,13 @@ namespace UserService.Services.Implementation
 
         public ServerOperationResult CreateUser(CreateUserRequest model)
         {
-            if (UserValidator.IsValidEmail(model.Email))
+            if (!UserValidator.IsValidEmail(model.Email))
                 return ServerOperationResult.Failed("Email is invalid", ServerResultCode.InvalidEmail);
-            if (UserValidator.IsValidName(model.Name))
+            if (!UserValidator.IsValidName(model.Name))
                 return ServerOperationResult.Failed("User name is required", ServerResultCode.UserNameIsRequired);
-            if (UserValidator.IsValidPassword(model.Password))
+            if (!UserValidator.IsValidPassword(model.Password))
                 return ServerOperationResult.Failed("Password is invalid", ServerResultCode.InvalidPassword);
-            if (UserValidator.IsValidRole(model.Role))
+            if (!UserValidator.IsValidRole(model.Role))
                 return ServerOperationResult.Failed("Invalid role is selected", ServerResultCode.InvalidRoleSelected);
             
             if (usersRepository.DoesExistByEmail(model.Email))
@@ -48,9 +48,9 @@ namespace UserService.Services.Implementation
 
         public async Task<ServerOperationResult> UpdateUserAsync(UpdateUserRequest model)
         {
-            if (UserValidator.IsValidEmail(model.Email))
+            if (!UserValidator.IsValidEmail(model.Email))
                 return ServerOperationResult.Failed("Email is invalid", ServerResultCode.InvalidEmail);
-            if (UserValidator.IsValidName(model.Name))
+            if (!UserValidator.IsValidName(model.Name))
                 return ServerOperationResult.Failed("User name is required", ServerResultCode.UserNameIsRequired);
 
             var existingUser = await usersRepository.GetUserByIdAsync(model.Id);
@@ -69,7 +69,7 @@ namespace UserService.Services.Implementation
 
         public ServerOperationResult UpdateUserRole(UpdateUserRoleRequest model)
         {
-            if (UserValidator.IsValidRole(model.Role))
+            if (!UserValidator.IsValidRole(model.Role))
                 return ServerOperationResult.Failed("Invalid role is selected", ServerResultCode.InvalidRoleSelected);
 
             usersRepository.UpdateRole(model.Id, (int)model.Role);
