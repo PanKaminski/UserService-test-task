@@ -7,6 +7,7 @@ namespace UserService.Services.Contract.Interfaces
     {
         ServerOperationResult CreateUser(CreateUserRequest model);
         Task<UsersResponse> GetUsersAsync();
+        Task<ServerOperationResult> UpdateUserAsync(UpdateUserRequest model);
         ServerOperationResult UpdateUserRole(UpdateUserRoleRequest model);
     }
 }

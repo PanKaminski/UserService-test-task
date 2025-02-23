@@ -8,5 +8,7 @@ namespace UserService.Repositories.Contract.Repositories
         bool DoesExistByEmail(string userEmail);
         void Add(UserEntity user);
         void UpdateRole(int userId, int roleCode);
+        Task UpdateUserAsync(UserEntity user);
+        Task<UserEntity> GetUserByIdAsync(int userId);
     }
 }

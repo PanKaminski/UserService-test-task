@@ -12,6 +12,11 @@ namespace UserService.Services.Implementation
     {
         private readonly IUsersRepository usersRepository;
 
+        public UserService(IUsersRepository usersRepository)
+        {
+            this.usersRepository = usersRepository ?? throw new ArgumentNullException(nameof(usersRepository));
+        }
+
         public ServerOperationResult CreateUser(CreateUserRequest model)
         {
             if (UserValidator.IsValidEmail(model.Email))
@@ -39,6 +44,27 @@ namespace UserService.Services.Implementation
             var users = (await usersRepository.GetAllAsync()).Select(u => u.ToModel()).ToList();
 
             return new UsersResponse { Users = users };
+        }
+
+        public async Task<ServerOperationResult> UpdateUserAsync(UpdateUserRequest model)
+        {
+            if (UserValidator.IsValidEmail(model.Email))
+                return ServerOperationResult.Failed("Email is invalid", ServerResultCode.InvalidEmail);
+            if (UserValidator.IsValidName(model.Name))
+                return ServerOperationResult.Failed("User name is required", ServerResultCode.UserNameIsRequired);
+
+            var existingUser = await usersRepository.GetUserByIdAsync(model.Id);
+            if (existingUser is null)
+            {
+                return ServerOperationResult.Failed($"User with the id {model.Id} does not exist", ServerResultCode.UserWithSuchIdDoesNotExist);
+            }
+
+            existingUser.Email = model.Email;
+            existingUser.Name = model.Name;
+
+            await usersRepository.UpdateUserAsync(existingUser);
+
+            return new ServerOperationResult(true, $"User {model.Name} has been updated");
         }
 
         public ServerOperationResult UpdateUserRole(UpdateUserRoleRequest model)

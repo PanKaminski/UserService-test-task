@@ -15,5 +15,6 @@ namespace UserService.Services.Contract.Enums
         InvalidRoleSelected,
         UserSuccessfullyCreated,
         UserWithSuchEmailExists,
+        UserWithSuchIdDoesNotExist,
     }
 }
